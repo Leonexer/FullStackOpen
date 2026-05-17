@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express()
  
-const persons = [
+let persons = [
   { 
     id: "1",
     name: "Arto Hellas", 
@@ -24,24 +24,37 @@ const persons = [
     number: "39-23-6423122"
   }
 ]
- 
+
+// Ruta 1: lista completa
 app.get('/api/persons', (request, response) => {
+  response.json(persons)
+})
+
+// Ruta 2: página de info
+app.get('/info', (request, response) => {
   const count = persons.length
   const time  = new Date()
-
-  const id = Number(request.params.id)
-  const person = persons.find(p => p.id === id)
-  
   response.send(`
     <p>Phonebook has info for ${count} people</p>
     <p>${time}</p>
   `)
+})
+
+// Ruta 3: una sola persona por ID
+app.get('/api/persons/:id', (request, response) => {
+  const person = persons.find(p => p.id === request.params.id)
 
   if (person) {
     response.json(person)
   } else {
     response.status(404).end()
   }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  persons = persons.filter(p => p.id !== id)
+  response.status(204).end()
 })
  
 const PORT = 3001
