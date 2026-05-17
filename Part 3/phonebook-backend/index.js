@@ -25,6 +25,8 @@ let persons = [
   }
 ]
 
+app.use(express.json())
+
 // Ruta 1: lista completa
 app.get('/api/persons', (request, response) => {
   response.json(persons)
@@ -55,6 +57,19 @@ app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   persons = persons.filter(p => p.id !== id)
   response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  const newPerson = {
+    id: String(Math.floor(Math.random() * 1000000)),
+    name: body.name,
+    number: body.number
+  }
+
+  persons = persons.concat(newPerson)
+  response.json(newPerson)
 })
  
 const PORT = 3001
