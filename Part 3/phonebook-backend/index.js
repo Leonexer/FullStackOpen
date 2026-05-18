@@ -62,6 +62,27 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
+  // Valida que un nombre haya sido cread
+  if (!body.name) {
+    return response.status(400).json({ 
+      error: 'name is missing' 
+    })
+  }
+
+  // Valida que contenga numero
+  if (!body.number) {
+    return response.status(400).json({ 
+      error: 'number is missing' 
+    })
+  }
+
+  // Busca si el nombre ya existe
+  if (persons.some(p => p.name === body.name)) {
+    return response.status(409).json({ 
+      error: 'name must be unique' 
+    })
+  }
+
   const newPerson = {
     id: String(Math.floor(Math.random() * 1000000)),
     name: body.name,
