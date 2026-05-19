@@ -2,7 +2,8 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
- 
+const cors = require('cors')
+
 let persons = [
   { 
     id: "1",
@@ -27,8 +28,11 @@ let persons = [
 ]
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(cors())
 
+// Solucion stringify
+morgan.token('body', (req) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 // Ruta 1: lista completa
 app.get('/api/persons', (request, response) => {
@@ -96,7 +100,7 @@ app.post('/api/persons', (request, response) => {
   response.json(newPerson)
 })
  
-const PORT = 3001
+const PORT = process.env.PORT || 3001     //Para quer se utilize el mismo puerto en Render
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
