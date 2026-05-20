@@ -60,6 +60,22 @@ app.post('/api/persons', (request, response, next) => {
     .catch(err => next(err))  // ← add this
 })
 
+//PUT para actualizar numeros
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(err => next(err))
+})
+
 // Error handler
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
