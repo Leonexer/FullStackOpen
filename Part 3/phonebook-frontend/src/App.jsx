@@ -52,15 +52,18 @@ const App = () => {
         personService
         .update(repeat.id, newPerson)
         .then(response => {
-        setPersons(persons.map(p => p.id !== repeat.id ? p : response.data))  //To replace in state
+        setPersons(persons.map(p => p.id !== repeat.id ? p : response.data))
         setNewName('')
         setNewNumber('')
         notify(`${newPerson.name}'s number was updated`)
-      }).catch(() => {
-        notify(`${newName} has already been removed from the server`, 'error')
-        setPersons(persons.filter(p => p.name !== newName))
-      })
-
+      }).catch(error => {
+            if (error.response && error.response.data.error) {
+              notify(error.response.data.error, 'error')
+            } else {
+              notify(`${newName} has already been removed from the server`, 'error')
+              setPersons(persons.filter(p => p.name !== newName))
+            }
+          })
       }
       return
     }
@@ -73,7 +76,7 @@ const App = () => {
       setNewName('')
       setNewNumber('')
       notify(`${newPerson.name} was added successfully`)
-    }).catch(() => notify(`Couldn't create contact`, 'error'))
+    }).catch(error => notify(error.response.data.error, 'error'))
   }
 
   const deletePerson = (id) => {
