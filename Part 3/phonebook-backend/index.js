@@ -57,7 +57,7 @@ app.post('/api/persons', (request, response, next) => {
   const person = new Person({ name: body.name, number: body.number })
   person.save()
     .then(savedPerson => response.json(savedPerson))
-    .catch(err => next(err))  // ← add this
+    .catch(err => next(err)) 
 })
 
 //PUT para actualizar numeros
