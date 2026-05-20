@@ -27,7 +27,25 @@ app.get('/info', (request, response) => {
   })
 })
 
-// POST (ahora a la base de datos dios)
+// get por id
+app.get('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
+  })
+})
+
+// Delete
+app.delete('/api/persons/:id', (request, response) => {
+  Person.findByIdAndDelete(request.params.id).then(() => {
+    response.status(204).end()
+  })
+})
+
+// POST (ahora a la base de datos)
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
